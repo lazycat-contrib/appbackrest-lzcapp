@@ -1,7 +1,7 @@
 package: community.lazycat.app.backrest
 name: Backrest
 description: "Web UI and orchestrator for restic backups: schedule plans, browse and restore snapshots."
-version: 0.0.0
+version: 1.14.1
 min_os_version: "1.5.0"
 homepage: https://github.com/garethgeorge/backrest
 author: Gareth George
