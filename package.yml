@@ -1,0 +1,17 @@
+package: community.lazycat.app.backrest
+name: Backrest
+description: "Web UI and orchestrator for restic backups: schedule plans, browse and restore snapshots."
+version: 0.0.0
+min_os_version: "1.5.0"
+homepage: https://github.com/garethgeorge/backrest
+author: Gareth George
+license: GPL-3.0
+permissions:
+  required: []
+locales:
+  zh:
+    name: Backrest
+    description: "restic 备份的 Web 界面与编排器：配置备份计划、浏览快照、一键恢复。"
+  en:
+    name: Backrest
+    description: "Web UI and orchestrator for restic backups: schedule plans, browse and restore snapshots."

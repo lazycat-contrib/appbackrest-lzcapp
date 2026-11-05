@@ -1,0 +1,44 @@
+application:
+  subdomain: backrest
+  multi_instance: false
+  # Backrest 有首次访问建号向导（用户名 + 密码），由它自己的登录页鉴权，
+  # 因此直接对外开放，不再套平台入口鉴权。
+  public_path:
+    - /
+  upstreams:
+    - location: /
+      backend: http://backrest:9898/
+services:
+  backrest:
+    image: docker.1ms.run/garethgeorge/backrest:v1.14.1
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TMPDIR=/tmp
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/data:/data
+      - /lzcapp/var/config:/config
+      - /lzcapp/var/cache:/cache
+      - /lzcapp/var/tmp:/tmp
+      - /lzcapp/var/repos:/repos
+      - /lzcapp/var/userdata:/userdata
+usage: |-
+  Backrest 是 restic 备份的 Web 界面与编排器：可视化配置备份计划、快照浏览、
+  恢复与保留策略，比直接用 restic 命令行省心得多。
+
+  首次使用：
+    - 打开后会出现建号向导，设置管理员用户名与密码即完成初始化，没有内置口令。
+    - 在「Repositories」里新建一个仓库，路径填容器内的 `/repos`（或远程 S3 / B2 / rclone 目标）。
+    - 在「Plans」里新建备份计划，要备份的目录填容器内的 `/userdata`；
+      需要备份的数据请放到该目录（当前未映射宿主机任意路径，如需备份其他目录请自行改 manifest）。
+
+  说明：
+    - 应用自带账号体系，直接对外开放由 Backrest 自己的登录页鉴权，所以使用 public_path；
+      请务必首次访问就设强密码，否则任何人都能进入并操作备份仓库。
+    - 数据在 /lzcapp/var/data 与 /lzcapp/var/config，仓库在 /lzcapp/var/repos，
+      备份源目录在 /lzcapp/var/userdata；卸载前请一并备份。
+    - rclone 配置目录未挂载，需要 rclone 远程存储时请自行在 manifest 里加
+      `/lzcapp/var/rclone:/root/.config/rclone` 并重启应用。
+    - 未做实机验证。
